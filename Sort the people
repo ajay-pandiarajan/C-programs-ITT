@@ -1,0 +1,31 @@
+int* global_heights;
+
+int compare(const void* a, const void* b) {
+    int idxA = *(const int*)a;
+    int idxB = *(const int*)b;
+    
+    return global_heights[idxB] - global_heights[idxA];
+}
+
+char** sortPeople(char** names, int namesSize, int* heights, int heightsSize, int* returnSize) {
+    *returnSize = namesSize;
+    
+    int* indices = (int*)malloc(namesSize * sizeof(int));
+    for (int i = 0; i < namesSize; i++) {
+        indices[i] = i;
+    }
+    
+    global_heights = heights;
+    
+    qsort(indices, namesSize, sizeof(int), compare);
+    
+    char** result = (char**)malloc(namesSize * sizeof(char*));
+    
+    for (int i = 0; i < namesSize; i++) {
+        result[i] = names[indices[i]];
+    }
+    
+    free(indices);
+    
+    return result;
+}
