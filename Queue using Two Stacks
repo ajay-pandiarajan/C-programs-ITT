@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_SIZE 100000
+
+typedef struct {
+    int data[MAX_SIZE];
+    int top;
+} Stack;
+
+void initStack(Stack *s) {
+    s->top = -1;
+}
+
+int isEmpty(Stack *s) {
+    return s->top == -1;
+}
+
+void push(Stack *s, int val) {
+    s->data[++(s->top)] = val;
+}
+
+int pop(Stack *s) {
+    return s->data[(s->top)--];
+}
+
+int peek(Stack *s) {
+    return s->data[s->top];
+}
+
+int main() {
+    int q;
+    if (scanf("%d", &q) != 1) return 0;
+
+    Stack stack_in, stack_out;
+    initStack(&stack_in);
+    initStack(&stack_out);
+
+    while (q--) {
+        int type;
+        scanf("%d", &type);
+
+        if (type == 1) {
+            int x;
+            scanf("%d", &x);
+            push(&stack_in, x);
+        } else {
+            // Transfer elements if stack_out is empty
+            if (isEmpty(&stack_out)) {
+                while (!isEmpty(&stack_in)) {
+                    push(&stack_out, pop(&stack_in));
+                }
+            }
+
+            if (type == 2) {
+                pop(&stack_out);
+            } else if (type == 3) {
+                printf("%d\n", peek(&stack_out));
+            }
+        }
+    }
+
+    return 0;
+}
