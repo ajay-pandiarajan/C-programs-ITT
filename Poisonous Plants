@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int val;
+    int days;
+} Plant;
+
+int poisonousPlants(int p_count, int* p) {
+    Plant* stack = (Plant*)malloc(p_count * sizeof(Plant));
+    int top = -1;
+    int max_overall_days = 0;
+
+    for (int i = 0; i < p_count; i++) {
+        int max_days = 0;
+
+        // Pop plants that have greater or equal pesticide levels
+        while (top >= 0 && p[i] <= stack[top].val) {
+            if (stack[top].days > max_days) {
+                max_days = stack[top].days;
+            }
+            top--;
+        }
+
+        // Determine the days to die for the current plant
+        int current_days = 0;
+        if (top >= 0) {
+            current_days = max_days + 1;
+        }
+
+        if (current_days > max_overall_days) {
+            max_overall_days = current_days;
+        }
+
+        // Push current plant onto the stack
+        top++;
+        stack[top].val = p[i];
+        stack[top].days = current_days;
+    }
+
+    free(stack);
+    return max_overall_days;
+}
+
+int main() {
+    int n;
+    if (scanf("%d", &n) != 1) return 0;
+
+    int* p = (int*)malloc(n * sizeof(int));
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &p[i]);
+    }
+
+    int result = poisonousPlants(n, p);
+    printf("%d\n", result);
+
+    free(p);
+    return 0;
+}
